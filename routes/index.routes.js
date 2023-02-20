@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
 /* GET home page */
@@ -6,8 +6,8 @@ router.get("/", (req, res, next) => {
   res.render("index");
 });
 
-router.use("/sofa", require("./sofa.routes"));
-router.use("/bookmark", require("./bookmark.routes"));
+router.use("/sofas", require("./sofa.routes"));
+router.use("/bookmarks", require("./bookmark.routes"));
 
 router.use("/", require("./auth.routes"));
 router.use("/", require("./user.routes"));

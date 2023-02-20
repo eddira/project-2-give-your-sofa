@@ -7,8 +7,16 @@ router.get("/", (req, res, next) => {
 });
 
 router.use("/sofa", require("./sofa.routes"));
-router.use("/user", require("./user.routes"));
 router.use("/bookmark", require("./bookmark.routes"));
+
+router.use("/", require("./auth.routes"));
+router.use("/", require("./user.routes"));
+router.use("/", log, require("./test.routes"));
+
+function log(req, res, next) {
+  console.log("Entering test routes!");
+  next();
+}
 
 
 module.exports = router;

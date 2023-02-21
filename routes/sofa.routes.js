@@ -4,9 +4,10 @@ const Bookmark = require("../models/Bookmark.model");
 const User = require("../models/User.model");
 const fileUploader = require("../config/cloudinary.config");
 
-router.get("/", (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
-    res.render("sofa/allSofas");
+    const allSofas = await Sofa.find()
+    res.render("sofa/allSofas" , {allSofas});
   } catch (error) {
     next(error);
   }
@@ -46,14 +47,14 @@ router.post(
         title,
         description,
         owner: req.session.currentUser._id,
-        picture_url: req.file?.path, // Only sends the path if there is a new file provided
+        picture: req.file?.path, // Only sends the path if there is a new file provided
       });
 
       await Sofa.create({
         title,
         description,
         owner: req.session.currentUser._id,
-        picture_url: req.file?.path, // Only sends the path if there is a new file provided
+        picture: req.file?.path, // Only sends the path if there is a new file provided
       });
       res.redirect("/sofas");
     } catch (error) {

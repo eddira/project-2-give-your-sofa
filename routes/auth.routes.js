@@ -31,10 +31,10 @@ router.get("/signup", async (req, res, next) => {
   res.render("auth/signup");
 });
 router.post("/signup", async (req, res, next) => {
-  const { username, password } = req.body;
-  console.log({ username, password });
+  const { username, password, email, phonenumber, postCode } = req.body;
+  console.log({ username, password, email, phonenumber, postCode });
   try {
-    if (!username || !password) {
+    if (!username || !password || !email || !phonenumber || !postCode) {
       return res.render("auth/signup", {
         errorMessage: "Please fill out all of the fields!",
       });
@@ -59,6 +59,9 @@ router.post("/signup", async (req, res, next) => {
     const userToCreate = {
       username,
       password: hashedPassword,
+      email,
+      phonenumber,
+      postCode,
     };
     const userFromDb = await User.create(userToCreate);
     console.log(userFromDb);

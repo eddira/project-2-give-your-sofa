@@ -1,7 +1,11 @@
 <h2>allSofas</h2>
-{{#each allSofas}}
-<div>
-    <h3>{{title}}</h3>
-    <img src="{{picture}}" alt="{{title}}">
+
+<div class="cards-container">
+  {{#each allSofas}}
+    <div class="sofa-card">
+      <h3>{{title}}</h3>
+      <img src="{{picture}}" alt="{{title}}" />
+    </div>
+  {{/each}}
+
 </div>
-{{/each}}

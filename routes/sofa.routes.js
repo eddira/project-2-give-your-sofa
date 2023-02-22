@@ -46,14 +46,14 @@ router.post(
         title,
         description,
         owner: req.session.currentUser._id,
-        picture_url: req.file?.path, // Only sends the path if there is a new file provided
+        picture: req.file?.path, // Only sends the path if there is a new file provided
       });
 
       await Sofa.create({
         title,
         description,
         owner: req.session.currentUser._id,
-        picture_url: req.file?.path, // Only sends the path if there is a new file provided
+        picture: req.file?.path, // Only sends the path if there is a new file provided
       });
       res.redirect("/sofas");
     } catch (error) {
@@ -62,9 +62,10 @@ router.post(
   }
 );
 
-router.get("/:sofaId", (req, res, next) => {
+router.get("/:sofaId", async (req, res, next) => {
   try {
-    res.render("sofa/oneSofa");
+    const oneSofa = await Movie.findById(req.params.sofaId);
+    res.render("sofa/sofaDetails", { oneSofa });
   } catch (error) {
     next(error);
   }
@@ -78,15 +79,26 @@ router.get("/:sofaId/edit", (req, res, next) => {
   }
 });
 
-router.post("/:sofaId/edit", (req, res, next) => {
+router.post("/:sofaId/edit", async (req, res, next) => {
   try {
+    const { title, description, picture, owner } = req.body;
+
+    await Sofa.findByIdAndUpdate(req.params.sofaId, {
+      title,
+      description,
+      picture,
+      owner,
+    });
+    res.redirect("/sofa");
   } catch (error) {
     next(error);
   }
 });
 
-router.post("/:sofaId/delete", (req, res, next) => {
+router.post("/:sofaId/delete", async (req, res, next) => {
   try {
+    await Sofa.findByIdAndDelete(req.params.sofaId);
+    res.redirect("/sofa");
   } catch (error) {
     next(error);
   }

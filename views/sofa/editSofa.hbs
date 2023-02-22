@@ -1,0 +1,14 @@
+<form action="/sofa/{{oneSofa._id}}/edit" method="post">
+  <label for="title">Title</label>
+  <input type="text" name="title" placeholder="Title"
+    value={{oneSofa.title}} />
+
+  <label for="genre">Genre</label>
+  <input type="text" name="genre" placeholder="Genre"
+    value={{oneSofa.description}} />
+
+  <label for="picture">Plot</label>
+  <input type="text" name="picture" placeholder="Picture_url" value={{oneSofa.picture}} />
+  
+  <input type="submit" value="Edit Sofa" />
+</form>

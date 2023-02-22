@@ -2,6 +2,7 @@ const express = require("express");
 const User = require("../models/User.model");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
+const isNotAuthenticated = require("../middlewares/isNotAuthenticated");
 
 /**
  *
@@ -27,9 +28,22 @@ const bcrypt = require("bcryptjs");
  *
  */
 
+router.get("/logout", (req, res, next) => {
+  req.session.destroy((error) => {
+    if (error) {
+      return next(error);
+    }
+    res.redirect("/login");
+  });
+});
+
+router.use("/signup", isNotAuthenticated);
+router.use("/login", isNotAuthenticated);
+
 router.get("/signup", async (req, res, next) => {
   res.render("auth/signup");
 });
+
 router.post("/signup", async (req, res, next) => {
   const { username, password, email, phonenumber, postCode } = req.body;
   console.log({ username, password, email, phonenumber, postCode });
@@ -110,15 +124,6 @@ router.post("/login", async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-});
-
-router.get("/logout", (req, res, next) => {
-  req.session.destroy((error) => {
-    if (error) {
-      return next(error);
-    }
-    res.redirect("/login");
-  });
 });
 
 module.exports = router;

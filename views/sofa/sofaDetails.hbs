@@ -1,15 +1,14 @@
 <h1>{{oneSofa.title}}</h1>
+<h2>{{oneSofa.owner.username}}</h2>
 
-<a href="/sofa/{{oneSofa._id}}/edit">Edit</a>
+{{#if userIsOwner}}
+  <a href="/sofas/{{oneSofa._id}}/edit">Edit</a>
 
-<form action="/sofa/{{oneSofa._id}}/delete" method="post">
-  <input type="submit" value="Delete" />
-</form>
+  <form action="/sofas/{{oneSofa._id}}/delete" method="post">
+    <input type="submit" value="Delete" />
+  </form>
+{{/if}}
 
-//to validate:
-
-<div>{{oneSofa.picture}}</div>
+<img src="{{oneSofa.picture}}" alt="" />
 
 <div>{{oneSofa.description}}</div>
-
-// user info ??

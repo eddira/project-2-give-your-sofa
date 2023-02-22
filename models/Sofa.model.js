@@ -19,6 +19,7 @@ const sofaSchema = new Schema(
     owner: {
       type: Schema.Types.ObjectId,
       ref: "User",
+      required: true,
     },
   },
   {
@@ -29,7 +30,4 @@ const sofaSchema = new Schema(
 
 const Sofa = model("Sofa", sofaSchema);
 
-module.exports = Sofa; 
-
-
-
+module.exports = Sofa;

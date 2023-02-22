@@ -6,15 +6,16 @@ const fileUploader = require("../config/cloudinary.config");
 
 router.get("/", async (req, res, next) => {
   try {
-    const allSofas = await Sofa.find()
-    res.render("sofa/allSofas" , {allSofas});
+    const allSofas = await Sofa.find();
+    res.render("sofa/allSofas", { allSofas });
   } catch (error) {
     next(error);
   }
 });
 
-router.get("/bookmarked", (req, res, next) => {
+router.get("/bookmarked", async (req, res, next) => {
   try {
+    const bookmarkedSofas = await Sofa.find.populate();
     res.render("sofa/bookmarkedSofas");
   } catch (error) {
     next(error);
@@ -65,16 +66,19 @@ router.post(
 
 router.get("/:sofaId", async (req, res, next) => {
   try {
-    const oneSofa = await Movie.findById(req.params.sofaId);
-    res.render("sofa/sofaDetails", { oneSofa });
+    const oneSofa = await Sofa.findById(req.params.sofaId).populate("owner");
+
+    const userIsOwner = oneSofa.owner._id.equals(req.session.currentUser._id);
+    res.render("sofa/sofaDetails", { oneSofa, userIsOwner });
   } catch (error) {
     next(error);
   }
 });
 
-router.get("/:sofaId/edit", (req, res, next) => {
+router.get("/:sofaId/edit", async (req, res, next) => {
   try {
-    res.render("sofa/editSofa");
+    const oneSofa = await Sofa.findById(req.params.sofaId);
+    res.render("sofa/editSofa", { oneSofa });
   } catch (error) {
     next(error);
   }
@@ -82,15 +86,26 @@ router.get("/:sofaId/edit", (req, res, next) => {
 
 router.post("/:sofaId/edit", async (req, res, next) => {
   try {
-    const { title, description, picture, owner } = req.body;
+    const { sofaId } = req.params;
+    const { title, description, picture } = req.body;
 
-    await Sofa.findByIdAndUpdate(req.params.sofaId, {
-      title,
-      description,
-      picture,
-      owner,
-    });
-    res.redirect("/sofa");
+    const updatedSofa = await Sofa.findOneAndUpdate(
+      {
+        _id: sofaId,
+        owner: req.session.currentUser._id,
+      },
+      {
+        title,
+        description,
+        // picture,
+      }
+    );
+
+    if (updatedSofa) {
+      res.redirect(`/sofas/${sofaId}`);
+    } else {
+      res.redirect("/sofas");
+    }
   } catch (error) {
     next(error);
   }
@@ -98,8 +113,12 @@ router.post("/:sofaId/edit", async (req, res, next) => {
 
 router.post("/:sofaId/delete", async (req, res, next) => {
   try {
-    await Sofa.findByIdAndDelete(req.params.sofaId);
-    res.redirect("/sofa");
+    await Sofa.findOneAndDelete({
+      _id: req.params.sofaId,
+      owner: req.session.currentUser._id,
+    });
+
+    res.redirect("/sofas");
   } catch (error) {
     next(error);
   }

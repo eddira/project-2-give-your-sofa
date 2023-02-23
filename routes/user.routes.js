@@ -21,12 +21,12 @@ router.get("/profile", isAuthenticated, async (req, res, next) => {
   } catch (error) {}
 });
 
-router.post("/profile/delete", async (req, res, next) => {
-  try {
-    res.render("user/deleteAccount");
-  } catch (error) {
-    next(error);
-  }
-});
+// router.post("/profile/delete", async (req, res, next) => {
+//   try {
+//     res.render("user/deleteAccount");
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 module.exports = router;

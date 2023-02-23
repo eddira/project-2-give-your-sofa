@@ -7,16 +7,21 @@ const fileUploader = require("../config/cloudinary.config");
 router.get("/", async (req, res, next) => {
   try {
     const allSofas = await Sofa.find();
-    res.render("sofa/allSofas", { allSofas });
-  } catch (error) {
-    next(error);
-  }
-});
+    const userBookmarks = await Bookmark.find({
+      user: req.session.currentUser._id,
+    });
+    const bookmarkedSofaIds = userBookmarks.map((bookmark) =>
+      bookmark.sofa.toString()
+    );
 
-router.get("/bookmarked", async (req, res, next) => {
-  try {
-    const bookmarkedSofas = await Sofa.find.populate();
-    res.render("sofa/bookmarkedSofas");
+    allSofas.forEach((sofa) => {
+      if (bookmarkedSofaIds.includes(sofa.id)) {
+        sofa.isBookmarked = true;
+      }
+      return sofa;
+    });
+
+    res.render("sofa/allSofas", { allSofas, title: "All Sofas" });
   } catch (error) {
     next(error);
   }
@@ -55,6 +60,23 @@ router.post(
     }
   }
 );
+
+router.get("/bookmarked", async (req, res, next) => {
+  try {
+    const bookmarkedSofas = await Bookmark.find({
+      user: req.session.currentUser._id,
+    }).populate("sofa");
+
+    const allSofas = bookmarkedSofas.map((bookmark) => {
+      bookmark.sofa.isBookmarked = true;
+      return bookmark.sofa;
+    });
+
+    res.render("sofa/allSofas", { allSofas, title: "Bookmaked Sofas" });
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.get("/:sofaId", async (req, res, next) => {
   try {
@@ -117,6 +139,39 @@ router.post("/:sofaId/delete", async (req, res, next) => {
     });
 
     res.redirect("/sofas");
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post("/:sofaId/bookmark/add", async (req, res, next) => {
+  try {
+    const foundSofa = await Sofa.findById(req.params.sofaId);
+    if (foundSofa) {
+      await Bookmark.findOneAndUpdate(
+        {
+          user: req.session.currentUser._id,
+          sofa: foundSofa._id,
+        },
+        {},
+        { upsert: true }
+      );
+    }
+
+    res.redirect("/sofas/bookmarked");
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post("/:sofaId/bookmark/remove", async (req, res, next) => {
+  try {
+    await Bookmark.findOneAndDelete({
+      user: req.session.currentUser._id,
+      sofa: req.params.sofaId,
+    });
+
+    res.redirect("/sofas/bookmarked");
   } catch (error) {
     next(error);
   }

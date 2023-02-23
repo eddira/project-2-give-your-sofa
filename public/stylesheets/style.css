@@ -24,8 +24,10 @@ h1 {
 
 .sofa-card > img {
   width: 100%;
+  height: 50%;
 }
 .sofa-card {
   margin: 2rem;
   text-align: center;
+  padding: 20px;
 }

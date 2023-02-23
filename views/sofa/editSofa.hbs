@@ -1,4 +1,8 @@
-<form action="/sofas/{{oneSofa._id}}/edit" method="post">
+<form
+  action="/sofas/{{oneSofa._id}}/edit"
+  method="post"
+  enctype="multipart/form-data"
+>
 
   <label for="title">Title</label>
   <input type="text" name="title" value={{oneSofa.title}} />
@@ -7,7 +11,7 @@
   <input type="text" name="description" value={{oneSofa.description}} />
 
   <label for="picture">Picture</label>
-  <input type="file" name="picture" value={{oneSofa.picture}} />
+  <input type="file" name="picture_url" value={{oneSofa.picture}} />
 
   <input type="submit" value="Edit Sofa" />
 

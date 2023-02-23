@@ -98,32 +98,38 @@ router.get("/:sofaId/edit", async (req, res, next) => {
   }
 });
 
-router.post("/:sofaId/edit", async (req, res, next) => {
-  try {
-    const { sofaId } = req.params;
-    const { title, description, picture } = req.body;
+router.post(
+  "/:sofaId/edit",
+  fileUploader.single("picture_url"),
+  async (req, res, next) => {
+    try {
+      const { sofaId } = req.params;
+      const { title, description } = req.body;
 
-    const updatedSofa = await Sofa.findOneAndUpdate(
-      {
-        _id: sofaId,
-        owner: req.session.currentUser._id,
-      },
-      {
-        title,
-        description,
-        // picture,
+      console.log("the req file", req.file);
+
+      const updatedSofa = await Sofa.findOneAndUpdate(
+        {
+          _id: sofaId,
+          owner: req.session.currentUser._id,
+        },
+        {
+          title,
+          description,
+          picture: req.file?.path,
+        }
+      );
+
+      if (updatedSofa) {
+        res.redirect(`/sofas/${sofaId}`);
+      } else {
+        res.redirect("/sofas");
       }
-    );
-
-    if (updatedSofa) {
-      res.redirect(`/sofas/${sofaId}`);
-    } else {
-      res.redirect("/sofas");
+    } catch (error) {
+      next(error);
     }
-  } catch (error) {
-    next(error);
   }
-});
+);
 
 router.post("/:sofaId/delete", async (req, res, next) => {
   try {

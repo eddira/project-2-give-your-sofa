@@ -1,13 +1,7 @@
 <h2>{{title}}</h2>
-
 <div class="cards-container">
   {{#each allSofas}}
     <div class="sofa-card">
-      <h3>{{title}}</h3>
-      <img src="{{picture}}" alt="{{title}}" />
-      <a href="/sofas/{{_id}}">Sofa Details</a>
-    </div>
-    <div>
       {{#if isBookmarked}}
         <form action="/sofas/{{_id}}/bookmark/remove" , method="post">
           <input type="submit" value="Unbookmark" />
@@ -17,6 +11,9 @@
           <input type="submit" value="Bookmark" />
         </form>
       {{/if}}
+      <h3>{{title}}</h3>
+      <img src="{{picture}}" alt="{{title}}" />
+      <a href="/sofas/{{_id}}">Sofa Details</a>
     </div>
   {{/each}}
 </div>

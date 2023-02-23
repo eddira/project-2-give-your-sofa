@@ -4,7 +4,7 @@ const router = express.Router();
 
 /* GET home page */
 router.get("/", (req, res, next) => {
-  res.render("index");
+  res.render("index", { isHome: true });
 });
 router.use("/", require("./auth.routes"));
 

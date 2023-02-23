@@ -1,25 +1,29 @@
+<h2>{{oneSofa.title}}</h2>
 <div class="cards-container">
+  <div class="sofa-card">
 
-  <h1>{{oneSofa.title}}</h1>
-  <h2>{{oneSofa.owner.username}}</h2>
+    <img src="{{oneSofa.picture}}" alt="" />
 
-  {{#if userIsOwner}}
-    <a href="/sofas/{{oneSofa._id}}/edit">Edit</a>
+    {{#if userIsOwner}}
+      <a href="/sofas/{{oneSofa._id}}/edit">Edit</a>
 
-    <form action="/sofas/{{oneSofa._id}}/delete" method="post">
-      <input type="submit" value="Delete" />
-    </form>
-  {{/if}}
+      <form action="/sofas/{{oneSofa._id}}/delete" method="post">
+        <input type="submit" value="Delete" />
+      </form>
+    {{/if}}
 
-  <img src="{{oneSofa.picture}}" alt="" />
-
+  </div>
 </div>
 
-<ul>
+<div class="details">
 
-  <li> {{oneSofa.description}}</li>
-  <li>{{oneSofa.owner.email}}</li>
-  <li>{{oneSofa.owner.phonenumber}}</li>
-  <li>{{oneSofa.owner.postCode}}</li>
+  <ul>
 
-</ul>
+    <li>Owner-Name:{{oneSofa.owner.username}}</li>
+    <li>Description:{{oneSofa.description}}</li>
+    <li>Email:{{oneSofa.owner.email}}</li>
+    <li>PhoneNumber:{{oneSofa.owner.phonenumber}}</li>
+    <li>PostCode:{{oneSofa.owner.postCode}}</li>
+
+  </ul>
+</div>
